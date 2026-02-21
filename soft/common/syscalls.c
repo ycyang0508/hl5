@@ -320,7 +320,7 @@ static void init_tls()
 {
   register void* thread_pointer asm("tp");
   extern char _tls_data;
-  extern __thread char _tdata_begin, _tdata_end, _tbss_end;
+  extern char _tdata_begin, _tdata_end, _tbss_end;
   size_t tdata_size = &_tdata_end - &_tdata_begin;
   memcpy(thread_pointer, &_tls_data, tdata_size);
   size_t tbss_size = &_tbss_end - &_tdata_end;

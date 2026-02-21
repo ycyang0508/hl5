@@ -60,7 +60,10 @@ set_attr hls_cc_options "$INCLUDES"
 set_attr end_of_sim_command "make saySimPassed"
 set_attr cc_options         "$INCLUDES -DCLOCK_PERIOD=$CLOCK_PERIOD -g"
 #set_systemc_options -version 2.3 -gcc 4.1
-use_systemc_simulator incisive
+use_systemc_simulator xcelium
+use_verilog_simulator xcelium ;# 'xcelium' or 'vcs'
+enable_waveform_logging -shm -viewer simvision;# to store signal transitions vcd, shm (for Xcelium)
+
 
 
 #

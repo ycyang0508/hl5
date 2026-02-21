@@ -45,6 +45,7 @@ SECTIONS
   .bss : { *(.bss) }
 
   /* thread-local data segment */
+  /*
   .tdata :
   {
     _tls_data = .;
@@ -57,6 +58,27 @@ SECTIONS
     *(.tbss)
     crt.o(.tbss.end)
   }
+  */
+ 
+
+  .tdata : {
+    _tls_data = .;       
+    _tdata_begin = .;
+    crt.o(.tdata.begin)
+    *(.tdata .tdata.*)
+    . = ALIGN(4);
+    _tdata_end = .;
+}
+
+.tbss : {
+    *(.tbss .tbss.*)
+    . = ALIGN(4);
+    crt.o(.tbss.end)
+    _tbss_end = .;
+}
+
+
+
 
   /* End of uninitalized data segement */
   _end = .;

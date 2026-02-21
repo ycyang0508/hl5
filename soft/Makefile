@@ -11,13 +11,13 @@ ifndef V
 endif
 RM = rm -rf
 
-CROSS_COMPILE ?= riscv32-unknown-elf-
+CROSS_COMPILE ?= riscv-none-elf-
 CC = $(CROSS_COMPILE)gcc
 OBJDUMP = $(CROSS_COMPILE)objdump
 OBJCOPY = $(CROSS_COMPILE)objcopy
 
 CFLAGS ?=
-CFLAGS += -O2 -march=rv32ima
+CFLAGS += -O2 -march=rv32ima_zicsr
 
 BOOT_OBJS = crt.o syscalls.o
 
@@ -43,16 +43,16 @@ $(TEXT): %.txt : %.srec srec2text.py
 	$(QUIET_OBJCOPY) ./srec2text.py $< > $@
 
 $(TARGETS): %.riscv : %.o $(BOOT_OBJS) ./common/test.ld
-	$(QUIET_CC) $(CC) -T ./common/test.ld $< syscalls.o crt.o -o $@ -static -nostdlib -nostartfiles -lgcc
+	$(QUIET_CC) $(CC) $(CFLAGS) -T ./common/test.ld $< syscalls.o crt.o -o $@ -static -nostdlib -nostartfiles -lgcc
 
 $(OBJS): %.o : %.c
 	$(QUIET_CC) $(CC) $(CFLAGS) -mcmodel=medany -static -std=gnu99 -O2 -ffast-math -fno-common -fno-builtin-printf -DPREALLOCATE=1 -DHOST_DEBUG=0 -c $< -o $@
 
 crt.o: common/crt.S common/encoding.h
-	$(QUIET_CC) $(CC) -mcmodel=medany -static -std=gnu99 -O2 -ffast-math -fno-common -fno-builtin-printf -DPREALLOCATE=1 -DHOST_DEBUG=0 -D__ASSEMBLY__=1 -c -I./common $< -o $@
+	$(QUIET_CC) $(CC) $(CFLAGS) -mcmodel=medany -static -std=gnu99 -O2 -ffast-math -fno-common -fno-builtin-printf -DPREALLOCATE=1 -DHOST_DEBUG=0 -D__ASSEMBLY__=1 -c -I./common $< -o $@
 
 syscalls.o: common/syscalls.c
-	$(QUIET_CC) $(CC) -mcmodel=medany -static -std=gnu99 -O2 -ffast-math -fno-common -fno-builtin-printf -DPREALLOCATE=1 -DHOST_DEBUG=0 -c $< -o $@
+	$(QUIET_CC) $(CC) $(CFLAGS) -mcmodel=medany -static -std=gnu99 -O2 -ffast-math -fno-common -fno-builtin-printf -DPREALLOCATE=1 -DHOST_DEBUG=0 -c $< -o $@
 
 clean:
 	$(QUIET_CLEAN) $(RM) $(OBJS) $(BOOT_OBJS) *.lst *.srec *.txt

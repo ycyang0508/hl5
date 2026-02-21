@@ -210,17 +210,29 @@ trap_entry:
   addi sp, sp, 272
   mret
 
-.section ".tdata.begin"
-.globl _tdata_begin
-_tdata_begin:
+#.section ".tdata.begin"
+#.globl _tdata_begin
+#_tdata_begin:
 
-.section ".tdata.end"
-.globl _tdata_end
-_tdata_end:
+#.section ".tdata.end"
+#.globl _tdata_end
+#_tdata_end:
 
-.section ".tbss.end"
-.globl _tbss_end
-_tbss_end:
+#.section ".tbss.end"
+#.globl _tbss_end
+#_tbss_end:
+
+.section ".tls_data_begin", "a"
+.globl _tls_data_begin
+_tls_data_begin:
+
+.section ".tls_data_end", "a"
+.globl _tls_data_end
+_tls_data_end:
+
+.section ".tls_bss_end", "a"
+.globl _tls_bss_end
+_tls_bss_end:
 
 .section ".tohost","aw",@progbits
 .align 6
